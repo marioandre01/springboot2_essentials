@@ -18,6 +18,7 @@ public class SpringClient {
         //Será feita a requisição e retornaraá um json, deve-se informar para o spring para ele fazer o mapeamento automaticamente usando o jackson
         //deve-se informar o tipo que se quer fazer o mapeamento
         //o Anime.class é o tipo de mapeamento que deve ser feito
+        //GET
         ResponseEntity<Anime> entity = new RestTemplate().getForEntity("http://localhost:8080/animes/{id}", Anime.class, 2);
         log.info(entity);
 
@@ -33,6 +34,7 @@ public class SpringClient {
                 });
         log.info(exchange.getBody());
 
+        //POST
         //metodo Post usando postForObject
 //        Anime kingdom = Anime.builder().name("kingdom").build(); //construindo o objeto a ser enviado
         //Enviando a requisição
@@ -49,6 +51,32 @@ public class SpringClient {
                 Anime.class);
 
         log.info("Saved anime {}", samuraiChamplooSaved);
+
+        //PUT
+        //Retorna Void
+        //Não tem nhum tipo de objeto na requisição por isso se esta usando Void.class
+        //Se esta usando ResponseEntity<> para se ter junto com a resposta a resposta HTTP, no caso para fazer um tratamento
+        // de erros caso for diferente da famalia 2xx
+        Anime animeToBeUpdated = samuraiChamplooSaved.getBody();
+        animeToBeUpdated.setName("Samaurai Champloo 2");
+
+        ResponseEntity<Void> samuraiChamplooUpadated = new RestTemplate().exchange("http://localhost:8080/animes",
+                HttpMethod.PUT,
+                new HttpEntity<>(animeToBeUpdated, createJsonHeaders()),
+                Void.class);
+
+        log.info(samuraiChamplooUpadated);
+
+        //DELETE
+        //no DELETE não precisa o HttpEntity<>, com isso ficou null, mas poderia passar o Header no DELETE caso se precise estar autenticado
+        ResponseEntity<Void> samuraiChamplooDeletet = new RestTemplate().exchange("http://localhost:8080/animes/{id}",
+                HttpMethod.DELETE,
+                null,
+                Void.class,
+                animeToBeUpdated.getId());
+
+        log.info(samuraiChamplooDeletet);
+
     }
 
     //exemplo para enviar um header na requisição HTTP dizendo que o contentType da requisição é um APPLICATION_JSON
