@@ -6,6 +6,8 @@ import academy.devdojo.springboot2.repository.AnimeRepository;
 import academy.devdojo.springboot2.requests.AnimePostRequestBody;
 import academy.devdojo.springboot2.requests.AnimePutRequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,19 +18,16 @@ import java.util.List;
 @Service //tranformando a classe AnimeService em spring bean
 @RequiredArgsConstructor //para o spring fazer a injeção de dependencia do animeRepository
 public class AnimeService {
-    //private final AnimeRepository animeRepository; //no futuro vai ser usado isso
-
-//    private static List<Anime> animes;
-//
-//    static {
-//        animes = new ArrayList<>(List.of(new Anime(1L, "Boku no Hero"), new Anime(2L,"Berserk")));
-//    }
 
     private final AnimeRepository animeRepository;
 
-    public List<Anime> listAll(){
-//        return animes;
-        return animeRepository.findAll();
+    //Alterar o retorno de List<> para Page<> - o spring fornece o Page<>, em listAll de receber o parametro Pageable pageable
+    //findAll deve receber o parametro pageable
+    //AnimeRepository estende de JpaRepository que estende de PagingAndSortingRepository que possui o metodo findAll(Pageable var1) que vai fazera paginação
+    //para testar fazer localhost:8080/animes?size=5 vai limitar a busca por 5 por vez
+    //para ver cada pagina fazer localhost:8080/animes?size=5&page=2, a pagina começa em 0
+    public Page<Anime> listAll(Pageable pageable){
+        return animeRepository.findAll(pageable);
     }
 
     public List<Anime> findByName(String name){
@@ -36,14 +35,6 @@ public class AnimeService {
     }
 
     public Anime findByIdOrThrowBadRequestException(long id){
-//        return animes.stream()
-//                .filter(anime -> anime.getId().equals(id))
-//                .findFirst()
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
-
-//        return animeRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
-
         return animeRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Anime not found"));
 
@@ -56,15 +47,11 @@ public class AnimeService {
     //coma anotação @Transactional(rollbackFor = Exception.class) vai ser levado em consideração as exceções do tipo checked
     @Transactional
     public Anime save(AnimePostRequestBody animePostRequestBody){
-//        anime.setId(ThreadLocalRandom.current().nextLong(3, 1000000));
-//        animes.add(anime);
-//        return anime;
         return animeRepository.save(Anime.builder().name(animePostRequestBody.getName()).build()); //estava assim antes de usar o mapper
 
     }
 
     public void delete(long id) {
-//        animes.remove(findById(id));
         animeRepository.delete(findByIdOrThrowBadRequestException(id));
     }
 
@@ -78,8 +65,6 @@ public class AnimeService {
                 .build();   //antes de usar o mapper
 
         animeRepository.save(anime);
-//        delete(anime.getId());
-//        animes.add(anime);
     }
 
 }
