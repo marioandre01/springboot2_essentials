@@ -40,6 +40,12 @@ public class  AnimeController {
     //por boa pratica na resposta é bom retornar algumas informações extras, como o status do Http
     //Usar ResponseEntity<>
 
+    @GetMapping(path= "/all")
+    public ResponseEntity<List<Anime>> listAll(){
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        return ResponseEntity.ok(animeService.listAllNonPageable());
+    }
+
     //usar path verbs "{/id}" variaveis que vão vir pela url
     //quem acessar localhost:8080/animes e passar um id ex: localhost:8080/animes/1
     //para pegar esse valor precisa-se mapear essa variavel no java usando @PathVariabel colocar o mesmo nome do parametro
