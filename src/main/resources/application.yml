@@ -12,5 +12,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update  #toda vez que a aplicação for iniciada o banco de dados vai ser atualizado
-    show-sql: true
+
+# faz o log do sql fazer parte do logback do log padrão do spring, deixa mais orgazizado e a performace é melhorada, em relação ao show-sql:true do jpa, que só printava no console
+# aqui esta se especificando o log do SQL do pacote hibernate
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
 

@@ -21,6 +21,7 @@ public class DevDojoWebMvcConfigurer implements WebMvcConfigurer {
         //size = 5 definindo 5 informações por pagina, para outros valores alterar esse valor
         // para testar fazer localhost:8080/animes no navegador ou no insomnia
         //para sobreescrever isso no teste fazer localhost:8080/animes?size=20 . para midar a pagina localhost:8080/animes?page=2
+        //para ordernar(sort) a busca por name fazer localhost:8080/animes?size=20&sort=name,desc
         pageHandler.setFallbackPageable(PageRequest.of(0, 5));
         resolvers.add(pageHandler);
     }
