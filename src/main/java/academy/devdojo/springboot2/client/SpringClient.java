@@ -3,8 +3,7 @@ package academy.devdojo.springboot2.client;
 import academy.devdojo.springboot2.domain.Anime;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -33,6 +32,31 @@ public class SpringClient {
                 new ParameterizedTypeReference<List<Anime>>() {
                 });
         log.info(exchange.getBody());
+
+        //metodo Post usando postForObject
+//        Anime kingdom = Anime.builder().name("kingdom").build(); //construindo o objeto a ser enviado
+        //Enviando a requisição
+        //em postForObject passar (url, objeto a ser enviado, o que vai ser retornado), olhando em Anime Controller no me to save(), esta retornando um Anime, -> ResponseEntity<Anime>
+//        Anime KingdomSaved = new RestTemplate().postForObject("http://localhost:8080/animes", kingdom, Anime.class);
+//        log.info("Saved anime {}", KingdomSaved);
+
+        //POST usando exchange, com o exchange pode-se enviar HeadersHttp dentro do HttpEntity<>()
+        Anime samuraiChamploo = Anime.builder().name("Samurai Champloo").build(); //construindo o objeto a ser enviado
+        //em exchange passar (url, metodo HTTP usado, objeto a ser enviado, o tipo que vai ser retornado)
+        ResponseEntity<Anime> samuraiChamplooSaved = new RestTemplate().exchange("http://localhost:8080/animes",
+                HttpMethod.POST,
+                new HttpEntity<>(samuraiChamploo, createJsonHeaders()),
+                Anime.class);
+
+        log.info("Saved anime {}", samuraiChamplooSaved);
+    }
+
+    //exemplo para enviar um header na requisição HTTP dizendo que o contentType da requisição é um APPLICATION_JSON
+    //chamar o metodo createJsonHeaders() no parametro new HttpEntity<>() do exchange
+    private static HttpHeaders createJsonHeaders(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return httpHeaders;
     }
 }
 
