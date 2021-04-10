@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 
 @Data //vai gerar get, set, equals, hashcode, toString
 @AllArgsConstructor //gerar um construtor com todos os atributos da classe anime
@@ -22,6 +23,7 @@ public class Anime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty(message = "The anime name cannot be empty")
     private String name;
 
 
