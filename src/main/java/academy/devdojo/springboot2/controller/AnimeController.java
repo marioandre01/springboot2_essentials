@@ -34,7 +34,7 @@ public class  AnimeController {
     //findAll deve receber o parametro pageable
     @GetMapping
     public ResponseEntity<Page<Anime>> list(Pageable pageable){
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+//        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAll(pageable));
     }
     //por boa pratica na resposta é bom retornar algumas informações extras, como o status do Http
@@ -42,7 +42,7 @@ public class  AnimeController {
 
     @GetMapping(path= "/all")
     public ResponseEntity<List<Anime>> listAll(){
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+//        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAllNonPageable());
     }
 
@@ -51,7 +51,7 @@ public class  AnimeController {
     //para pegar esse valor precisa-se mapear essa variavel no java usando @PathVariabel colocar o mesmo nome do parametro
     @GetMapping(path = "/{id}")
     public ResponseEntity<Anime> findById(@PathVariable long id){
-        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+//        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
 //      return new ResponseEntity<>(animeService.findById(id), HttpStatus.OK); //outro jeito de fazer
 
